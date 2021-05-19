@@ -11,12 +11,17 @@ on:
   pull_request:
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - name: Clone source code
       uses: actions/checkout@v1
       with:
         fetch-depth: 1
+    - name: Docker Buildx
+      uses: crazy-max/ghaction-docker-buildx@v1.4.0
+      with:
+        version: v0.4.1
     - name: Docker build
       run: |
-        docker build -t test/test .
+        PLATFORMS=$(cat PLATFORMS)
+        docker buildx build --platform "${PLATFORMS}" .
