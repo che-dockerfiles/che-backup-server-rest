@@ -7,14 +7,16 @@
 #
 
 # https://access.redhat.com/containers/?tab=tags#/registry.access.redhat.com/ubi8-minimal
-FROM registry.access.redhat.com/ubi8-minimal:8.1-409
+FROM registry.access.redhat.com/ubi8-minimal:8.4-200
 
-ARG ARCH=amd64
-
-ARG KUBERNETES_VERSION=1.17.3
+ARG KUBERNETES_VERSION=1.21.1
 ARG REST_SERVER_VERSION=0.10.0
 
-RUN microdnf install -y openssl tar gzip && \
+RUN export ARCH="$(uname -m)" && \
+    if [[ ${ARCH} == "x86_64" ]]; then export ARCH="amd64"; \
+    elif [[ ${ARCH} == "aarch64" ]]; then export ARCH="arm64"; \
+    fi && \
+    microdnf install -y openssl tar gzip && \
     cd /usr/local/bin && \
     curl -sLO https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_VERSION}/bin/linux/${ARCH}/kubectl && \
     chmod +x kubectl && \

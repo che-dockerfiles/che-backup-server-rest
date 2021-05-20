@@ -1,4 +1,4 @@
-# Copyright (c) 2020 Red Hat, Inc.
+# Copyright (c) 2021 Red Hat, Inc.
 # This program and the accompanying materials are made
 # available under the terms of the Eclipse Public License 2.0
 # which is available at https://www.eclipse.org/legal/epl-2.0/
@@ -8,12 +8,14 @@
 
 FROM alpine:3.13.4
 
-ARG ARCH=amd64
-
-ARG KUBERNETES_VERSION=1.17.3
+ARG KUBERNETES_VERSION=1.21.1
 ARG REST_SERVER_VERSION=0.10.0
 
-RUN apk add --no-cache curl && \
+RUN export ARCH="$(uname -m)" && \
+    if [[ ${ARCH} == "x86_64" ]]; then export ARCH="amd64"; \
+    elif [[ ${ARCH} == "aarch64" ]]; then export ARCH="arm64"; \
+    fi && \
+    apk add --no-cache curl && \
     cd /usr/local/bin && \
     curl -sLO https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_VERSION}/bin/linux/${ARCH}/kubectl && \
     chmod +x kubectl && \
