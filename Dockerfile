@@ -20,6 +20,7 @@ RUN export ARCH="$(uname -m)" && \
     curl -sLO https://storage.googleapis.com/kubernetes-release/release/v${KUBERNETES_VERSION}/bin/linux/${ARCH}/kubectl && \
     chmod +x kubectl && \
     cd /tmp && \
+    set -x && \
     curl -sLO https://github.com/restic/rest-server/releases/download/v${REST_SERVER_VERSION}/rest-server_${REST_SERVER_VERSION}_linux_${ARCH}.tar.gz && \
     tar -xzf rest-server_${REST_SERVER_VERSION}_linux_${ARCH}.tar.gz && \
     cp rest-server_${REST_SERVER_VERSION}_linux_${ARCH}/rest-server /usr/local/bin/rest-server && \
