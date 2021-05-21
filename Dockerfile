@@ -6,7 +6,7 @@
 # SPDX-License-Identifier: EPL-2.0
 #
 
-FROM alpine:3.13.4
+FROM alpine:3.13.5
 
 ARG KUBERNETES_VERSION=1.21.1
 ARG REST_SERVER_VERSION=0.10.0
