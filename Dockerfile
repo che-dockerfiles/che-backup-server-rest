@@ -7,7 +7,7 @@
 #
 
 # https://access.redhat.com/containers/?tab=tags#/registry.access.redhat.com/ubi8/go-toolset
-FROM registry.access.redhat.com/ubi8/go-toolset:1.15.7-11 as builder
+FROM registry.access.redhat.com/ubi8/go-toolset:1.15.13-4 as builder
 ENV GOPATH=/tmp/go/
 
 ENV REST_SERVER_TAG=v0.10.0
@@ -19,7 +19,7 @@ RUN export ARCH="$(uname -m)" && \
     git clone --depth 1 --branch $REST_SERVER_TAG https://github.com/restic/rest-server.git && \
     cd rest-server && \
     go mod vendor && \
-    GOOS=linux GOARCH=${ARCH} CGO_ENABLED=0 go build -mod=vendor -o rest-server  ./cmd/rest-server
+    GOOS=linux GOARCH=${ARCH} CGO_ENABLED=0 go build -mod=vendor -o rest-server ./cmd/rest-server
 
 # https://access.redhat.com/containers/?tab=tags#/registry.access.redhat.com/ubi8/ubi-micro
 FROM registry.access.redhat.com/ubi8/ubi-micro:8.4-72
