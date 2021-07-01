@@ -12,9 +12,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        dockerfile: ['Dockerfile', 'rhel.Dockerfile']
     steps:
     - name: Clone source code
       uses: actions/checkout@v1
@@ -27,4 +24,4 @@ jobs:
     - name: Docker build
       run: |
         PLATFORMS=$(cat PLATFORMS)
-        docker buildx build --platform "${PLATFORMS}" -f ${{matrix.dockerfile}} .
+        docker buildx build --platform "${PLATFORMS}" -f Dockerfile .

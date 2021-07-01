@@ -6,22 +6,23 @@
 # SPDX-License-Identifier: EPL-2.0
 #
 
-FROM golang:1.16.5-alpine3.14 as builder
+# https://access.redhat.com/containers/?tab=tags#/registry.access.redhat.com/ubi8/go-toolset
+FROM registry.access.redhat.com/ubi8/go-toolset:1.15.7-11 as builder
+ENV GOPATH=/tmp/go/
 
 ENV REST_SERVER_TAG=v0.10.0
-RUN apk add --no-cache git && \
-    export ARCH="$(uname -m)" && \
+RUN export ARCH="$(uname -m)" && \
     if [[ ${ARCH} == "x86_64" ]]; then export ARCH="amd64"; \
     elif [[ ${ARCH} == "aarch64" ]]; then export ARCH="arm64"; \
     fi && \
-    mkdir -p /tmp/go && cd /tmp/go && \
+    mkdir -p $GOPATH && cd $GOPATH && \
     git clone --depth 1 --branch $REST_SERVER_TAG https://github.com/restic/rest-server.git && \
     cd rest-server && \
     go mod vendor && \
     GOOS=linux GOARCH=${ARCH} CGO_ENABLED=0 go build -mod=vendor -o rest-server  ./cmd/rest-server
 
-
-FROM alpine:3.13.5
+# https://access.redhat.com/containers/?tab=tags#/registry.access.redhat.com/ubi8/ubi-micro
+FROM registry.access.redhat.com/ubi8/ubi-micro:8.4-72
 
 COPY --from=builder /tmp/go/rest-server/rest-server /usr/local/bin/rest-server
 COPY --from=builder /tmp/go/rest-server/LICENSE /usr/local/bin/rest-server-LICENSE.txt
