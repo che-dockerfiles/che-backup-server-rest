@@ -40,15 +40,14 @@ jobs:
           echo "Build and push image ${IMAGE_NAME}:${SHORT_COMMIT_HASH}"
           docker buildx build --platform "${PLATFORMS}" -t "${IMAGE_NAME}:${SHORT_COMMIT_HASH}" --push .
           docker tag ${IMAGE_NAME}:${SHORT_COMMIT_HASH} ${IMAGE_NAME}:next
-
-    - name: Create failure MM message
-      if: ${{ failure() }}
-      run: |
-        echo "{\"text\":\":no_entry_sign: Next Che Backup Server build has failed: https://github.com/che-dockerfiles/che-backup-server-rest/actions/workflows/next-build.yml\"}" > mattermost.json
-    - name: Send MM message
-      if: ${{ failure() }}
-      uses: mattermost/action-mattermost-notify@1.1.0
-      env:
-        MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
-        MATTERMOST_CHANNEL: eclipse-che-ci
-        MATTERMOST_USERNAME: che-bot
+      - name: Create failure MM message
+        if: ${{ failure() }}
+        run: |
+          echo "{\"text\":\":no_entry_sign: Next Che Backup Server build has failed: https://github.com/che-dockerfiles/che-backup-server-rest/actions/workflows/next-build.yml\"}" > mattermost.json
+      - name: Send MM message
+        if: ${{ failure() }}
+        uses: mattermost/action-mattermost-notify@1.1.0
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+          MATTERMOST_CHANNEL: eclipse-che-ci
+          MATTERMOST_USERNAME: che-bot
