@@ -38,8 +38,7 @@ jobs:
           SHORT_COMMIT_HASH=$(git rev-parse --short HEAD)
           PLATFORMS=$(cat PLATFORMS)
           echo "Build and push image ${IMAGE_NAME}:${SHORT_COMMIT_HASH}"
-          docker buildx build --platform "${PLATFORMS}" -t "${IMAGE_NAME}:${SHORT_COMMIT_HASH}" --push .
-          docker tag ${IMAGE_NAME}:${SHORT_COMMIT_HASH} ${IMAGE_NAME}:next
+          docker buildx build --platform "${PLATFORMS}" -t "${IMAGE_NAME}:${SHORT_COMMIT_HASH}" -t "${IMAGE_NAME}:next" --push .
       - name: Create failure MM message
         if: ${{ failure() }}
         run: |
